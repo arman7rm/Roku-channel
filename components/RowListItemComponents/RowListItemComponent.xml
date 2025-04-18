@@ -3,6 +3,8 @@
     xsi:noNamespaceSchemaLocation="https://devtools.web.roku.com/schema/RokuSceneGraph.xsd">
     <interface>
         <field id="itemContent" type="node" onChange="OnContentSet" />
+        <field id="focusPercent" type="float" onChange="showfocus" />
+        <field id="rowFocusPercent" type="float" onChange="showrowfocus" />
     </interface>
     <script type="text/brightscript" uri="RowItemListComponent.brs" />
     <children>
@@ -14,21 +16,16 @@
             loadWidth="200"
             loadHeight="120"
             loadDisplayMode="scaleToFit"
-        />
-
-        <!-- 🔁 Animation node must be outside Poster to work on poster.scale -->
-        <Animation
-            id="scaleAnimation"
-            duration="0.2"
-            easeFunction="linear"
-            repeat="false"
+            scaleRotateCenter = "[ 100.0, 60.0 ]"  
         >
-            <Vector2DFieldInterpolator
-                id="scaleInterpolator"
-                key="[0.0, 1.0]"
-                keyValue="[[1.0,1.0], [1.1,1.1]]"
-                fieldToInterp="poster.scale"
-            />
-        </Animation>
+            <Rectangle
+                id="itemMask"
+                color="0x000000FF"
+                opacity="0.75"
+                width="200"
+                height="120"
+                scaleRotateCenter="[ 100.0, 60.0 ]" />
+        </Poster>
+
     </children>
 </component>

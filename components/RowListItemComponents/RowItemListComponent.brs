@@ -1,22 +1,16 @@
 function Init()
     m.poster = m.top.FindNode("poster")
-    m.scaleAnimation = m.top.FindNode("scaleAnimation")
-
-    ' Initialize default scale (important for consistency)
-    m.poster.scale = [1.0, 1.0]
-
-    m.top.ObserveField("focused", "onFocusChange")
+    m.itemmask = m.top.findNode("itemMask")
 end function
 
-sub onFocusChange()
-    if m.top.focused
-        print "Item focused, starting animation"
-        m.scaleAnimation.control = "start"
-    else
-        print "Item unfocused, resetting scale"
-        m.scaleAnimation.control = "stop"
-        m.poster.scale = [1.0, 1.0]
-    end if
+sub showfocus()
+    'This increases the size of the tile as it gains more focus
+    scale = 1 + (m.top.focusPercent * 0.08)
+    m.poster.scale = [scale, scale]
+end sub
+
+sub showrowfocus()
+    m.itemmask.opacity = 0.75 - (m.top.rowFocusPercent * 0.75)
 end sub
 
 sub OnContentSet()

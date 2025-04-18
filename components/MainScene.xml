@@ -26,17 +26,5 @@
             vertAlign="center"
             font="font:MediumBoldSystemFont"
         />
-        <Animation
-            id="fadeAnim"
-            duration="0.8"
-            repeat="true"
-            easeFunction="linear"
-        >
-            <FloatFieldInterpolator
-                fieldToInterp="loadingIndicator.opacity"
-                key="[0.0, 0.5, 1.0]"
-                keyValue="[0.5, 1.0, 0.5]"
-            />
-        </Animation>
     </children>
 </component>
