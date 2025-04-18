@@ -2,14 +2,57 @@ sub Init()
     m.top.functionName = "GetContent"
 end sub
 
+function GetContent() as void
+    response = GetResponse("https://cd-static.bamgrid.com/dp-117731241344/home.json")
+
+    if response = invalid
+        print "Error fetching content: Invalid response recieved."
+        return
+    end if
+
+    rootChildren = []
+    rows = {}
+
+    containers = GetContainers(response)
+
+    if containers = invalid
+        print "Error fetching content: Invalid response structure."
+    end if
+
+    for each container in containers
+        items = container.set.items
+        if items <> invalid
+            row = {}
+            row.title = container.set.text.title.full.set.default.content
+            row.children = []
+            for each item in items
+                itemData = GetItemData(item)
+                row.children.Push(itemData)
+            end for
+            rootChildren.Push(row)
+        end if
+    end for
+
+    ' set up a root ContentNode to represent rowList on the GridScreen
+    contentNode = CreateObject("roSGNode", "ContentNode")
+    contentNode.Update({
+        children: rootChildren
+    }, true)
+
+    ' populate content field with root content node.
+    ' Observer(see OnMainContentLoaded in ContentTaskLogic.brs) is invoked at that moment
+    m.top.content = contentNode
+end function
+
 function GetResponse(url as string) as dynamic
     xfer = CreateObject("roURLTransfer")
     xfer.SetCertificatesFile("common:/certs/ca-bundle.crt")
     xfer.SetURL(url)
     xfer.RetainBodyOnError(true)
+    xfer.InitClientCertificates()
 
     response = xfer.GetToString()
-    
+
     if response = invalid or response = ""
         print "Error fetching URL: " + url
         return invalid
@@ -18,41 +61,21 @@ function GetResponse(url as string) as dynamic
     return response
 end function
 
-function GetContent() as void
-    response = GetResponse("https://cd-static.bamgrid.com/dp-117731241344/home.json")
-    rootChildren = []
-    rows = {}
-
-    json = ParseJson(response)
+function GetContainers(rsp as object) as dynamic
+    json = ParseJson(rsp)
     if json <> invalid
         data = json.data
         if data <> invalid
             standardCollection = data.StandardCollection
-            'contentDescription = standardCollection.Lookup("text", invalid).Lookup("title", invalid).Lookup("full", invalid).Lookup("collection", invalid).Lookup("default", invalid).Lookup("content", "Unknown")
-            containers = standardCollection.containers
-            for each container in containers
-                items = container.set.items
-                if items <> invalid
-                    row = {}
-                    row.title = container.set.text.title.full.set.default.content
-                    row.children = []
-                    for each item in items
-                        itemData = GetItemData(item)
-                        row.children.Push(itemData)
-                    end for
-                    rootChildren.Push(row)
+            if standardCollection <> invalid
+                containers = standardCollection.containers
+                if containers <> invalid
+                    return containers
                 end if
-            end for
-            ' set up a root ContentNode to represent rowList on the GridScreen
-            contentNode = CreateObject("roSGNode", "ContentNode")
-            contentNode.Update({
-                children: rootChildren
-            }, true)
-            ' populate content field with root content node.
-            ' Observer(see OnMainContentLoaded in MainScene.brs) is invoked at that moment
-            m.top.content = contentNode
+            end if
         end if
     end if
+    return invalid
 end function
 
 function GetItemData(video as object)
