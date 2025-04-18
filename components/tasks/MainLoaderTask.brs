@@ -66,7 +66,7 @@ function GetItemData(video as object)
     ' url = video.image.tile["1.78"].series.default.url
     item.tile = GetImage(video)
     
-
+    print item.tile
     ' if url <> invalid
     '     item.tile = url
     ' end if
@@ -118,25 +118,46 @@ function GetItemData(video as object)
 end function
 
 function GetImage(video as object)
-    image = video.image' or json.image
-    if image <> invalid
-        tile = image["tile"] 
-        if tile <> invalid
-            aspectRatio1_78 = tile["1.78"] 
-            if aspectRatio1_78 <> invalid
-                series = aspectRatio1_78["series"]  
-                if series <> invalid
-                    default = series["default"]  
-                    if default <> invalid
-                        url = default["url"]
-                        if url <> invalid
-                            return url
-                        end if
-                    end if
-                end if
-            end if
-        end if
+    if video = invalid or video.image = invalid
+        print "Error: Video is invalid or does not contain images"
+        return ""
     end if
+
+    tile = video.image.tile
+    if tile = invalid 
+        print "Error: Does not contain tile"
+        return ""
+    end if
+
+    aspectRatio1_78 = tile["1.78"]
+    if aspectRatio1_78 = invalid
+        print "Error: Does not contain image in aspect ration 1.78"
+        return ""
+    end if
+
+    ' Check for either "series" or other possible parent objects
+    contentParent = invalid
+    for each key in aspectRatio1_78
+        if aspectRatio1_78[key] <> invalid
+            contentParent = aspectRatio1_78[key]
+            exit for
+        end if
+    end for
+
+    if contentParent = invalid 
+        print "Error: Does not contain image in aspect ration 1.78"
+        return ""
+    end if
+
+    default = contentParent.default
+    if default = invalid
+        print "Error: Does not contain default image"
+        return ""
+    end if
+
+    url = default.url
+    if url <> invalid then return url
+
     return ""
 end function
 
