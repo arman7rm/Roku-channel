@@ -4,19 +4,16 @@ end sub
 
 function GetContent() as void
     response = GetResponse("https://cd-static.bamgrid.com/dp-117731241344/home.json")
-
     if response = invalid
         print "Error fetching content: Invalid response recieved."
         return
     end if
 
     rootChildren = []
-    rows = {}
-
+    
     containers = GetContainers(response)
-
     if containers = invalid
-        print "Error fetching content: Invalid response structure."
+        print "Error fetching content: Invalid response structure. Failed to get containers."
     end if
 
     for each container in containers
@@ -52,7 +49,6 @@ function GetResponse(url as string) as dynamic
     xfer.InitClientCertificates()
 
     response = xfer.GetToString()
-
     if response = invalid or response = ""
         print "Error fetching URL: " + url
         return invalid
@@ -61,21 +57,13 @@ function GetResponse(url as string) as dynamic
     return response
 end function
 
-function GetContainers(rsp as object) as dynamic
+function GetContainers(rsp as Dynamic) as Dynamic
+    if rsp = invalid then return invalid
+
     json = ParseJson(rsp)
-    if json <> invalid
-        data = json.data
-        if data <> invalid
-            standardCollection = data.StandardCollection
-            if standardCollection <> invalid
-                containers = standardCollection.containers
-                if containers <> invalid
-                    return containers
-                end if
-            end if
-        end if
-    end if
-    return invalid
+    if json = invalid then return invalid
+
+    return json?.data?.StandardCollection?.containers
 end function
 
 function GetItemData(video as object)
