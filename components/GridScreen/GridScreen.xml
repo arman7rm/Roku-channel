@@ -5,10 +5,11 @@
         <field id="content" type="node" alias="RowList.content" />
     </interface>
     <children>
-        <Label 
+        <Label
             id="titleLabel"
             width="1020"
-            translation="[130,170]"
+            translation="[130,200]"
+            font="font:LargeSystemFont"
         />
         <!-- 
         <Label 
@@ -19,11 +20,11 @@
             translation="[130,220"
         />
 -->
-        <RowList 
+        <RowList
             itemComponentName="RowListItemComponent"
             id="rowList"
-            translation="[80,350]"
-            numRows="2"
+            translation="[80,250]"
+            numRows="3"
             rowItemSize="[[320,180]]"
             rowItemSpacing="[[20,0]]"
             itemSize="[1100,270]"

@@ -64,25 +64,8 @@ function GetItemData(video as object)
     end for
 
     ' url = video.image.tile["1.78"].series.default.url
-    image = video.image' or json.image
-    if image <> invalid
-        tile = image["tile"] ' or image.tile
-        if tile <> invalid
-            aspectRatio1_78 = tile["1.78"] ' or tile.1_78 (but "1.78" is safer)
-            if aspectRatio1_78 <> invalid
-                series = aspectRatio1_78["series"] ' or aspectRatio1_78.series
-                if series <> invalid
-                    default = series["default"] ' or series.default
-                    if default <> invalid
-                        url = default["url"]
-                        if url <> invalid
-                            item.tile = url
-                        end if
-                    end if
-                end if
-            end if
-        end if
-    end if
+    item.tile = GetImage(video)
+    
 
     ' if url <> invalid
     '     item.tile = url
@@ -132,6 +115,29 @@ function GetItemData(video as object)
         end if
     end for
     return item
+end function
+
+function GetImage(video as object)
+    image = video.image' or json.image
+    if image <> invalid
+        tile = image["tile"] 
+        if tile <> invalid
+            aspectRatio1_78 = tile["1.78"] 
+            if aspectRatio1_78 <> invalid
+                series = aspectRatio1_78["series"]  
+                if series <> invalid
+                    default = series["default"]  
+                    if default <> invalid
+                        url = default["url"]
+                        if url <> invalid
+                            return url
+                        end if
+                    end if
+                end if
+            end if
+        end if
+    end if
+    return ""
 end function
 
 sub GetRefSet(refID as string)

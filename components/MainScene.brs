@@ -3,7 +3,7 @@
 sub Init()
     ' set background
     m.top.backgroundColor = "#000000"
-    m.top.backgroundUri = ""
+    m.top.backgroundUri = "pkg:/images/background.jpg"
 
     ' store loading indicator
     m.loadingIndicator = m.top.FindNode("loadingIndicator")

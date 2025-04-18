@@ -11,7 +11,7 @@
             showOptions="false"
             showClock="false"
             logoUri="pkg:/images/hd_overhang_logo.png"
-            translation="[0,60]"
+            translation="[0,10]"
         />
         <!-- Loading Indicator should be visible only in case of waiting for content -->
         <Label
