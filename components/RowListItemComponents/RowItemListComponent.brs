@@ -16,10 +16,11 @@ end sub
 sub OnContentSet()
     content = m.top.itemContent
     if content = invalid then return
-
     if m.poster <> invalid
         if content.tile <> invalid
             m.poster.uri = content.tile
+        else
+            m.poster.uri = "pkg:/images/error-image.png"
         end if
     else
         print "Error: 'poster' node not found!"

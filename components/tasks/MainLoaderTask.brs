@@ -10,7 +10,7 @@ function GetContent() as void
     end if
 
     rootChildren = []
-    
+
     containers = GetContainers(response)
     if containers = invalid
         print "Error fetching content: Invalid response structure. Failed to get containers."
@@ -47,17 +47,49 @@ function GetResponse(url as string) as dynamic
     xfer.SetURL(url)
     xfer.RetainBodyOnError(true)
     xfer.InitClientCertificates()
+    port = CreateObject("roMessagePort")
+    xfer.SetPort(port)
 
     response = xfer.GetToString()
-    if response = invalid or response = ""
-        print "Error fetching URL: " + url
-        return invalid
+    if xfer.AsyncGetToString()
+        msg = wait(3000, port)
+        if type(msg) = "roUrlEvent"
+            status = msg.GetResponseCode()
+            if status = 200
+                return response
+            else
+                print "Error fetching URL: " + url
+                return invalid
+            end if
+        end if
     end if
-
-    return response
 end function
 
-function GetContainers(rsp as Dynamic) as Dynamic
+function ValidateImage(url as string) as dynamic
+    xfer = CreateObject("roURLTransfer")
+    xfer.SetCertificatesFile("common:/certs/ca-bundle.crt")
+    xfer.SetURL(url)
+    xfer.RetainBodyOnError(true)
+    xfer.InitClientCertificates()
+    port = CreateObject("roMessagePort")
+    xfer.SetPort(port)
+
+    response = xfer.GetToString()
+    if xfer.AsyncGetToString()
+        msg = wait(2000, port)
+        if type(msg) = "roUrlEvent"
+            status = msg.GetResponseCode()
+            if status = 200
+                return true
+            else
+                print "Error: Image not found."
+                return false
+            end if
+        end if
+    end if
+end function
+
+function GetContainers(rsp as dynamic) as dynamic
     if rsp = invalid then return invalid
 
     json = ParseJson(rsp)
@@ -82,59 +114,38 @@ function GetItemData(video as object)
 
     item.tile = GetImage(video)
     item.contentId = video.contentId
-    item.videoArt = []
 
-    for each media in video.videoArt
-        urls = media.urls
-        if urls <> invalid and urls.Count() > 0
-            item.videoArt.Push(media.urls[0])
-        end if
-    end for
     return item
 end function
 
 function GetImage(video as object)
-    if video = invalid or video.image = invalid
-        print "Error: Video is invalid or does not contain images"
-        return ""
-    end if
+    aspectRatio1_78 = video?.image?.tile["1.78"]
 
-    tile = video.image.tile
-    if tile = invalid
-        print "Error: Does not contain tile"
-        return ""
-    end if
-
-    aspectRatio1_78 = tile["1.78"]
     if aspectRatio1_78 = invalid
         print "Error: Does not contain image in aspect ration 1.78"
-        return ""
+        return invalid
     end if
 
     ' Check for either "series" or other possible parent objects
-    contentParent = invalid
+    contentParent = aspectRatio1_78
     for each key in aspectRatio1_78
         if aspectRatio1_78[key] <> invalid
+            print key
             contentParent = aspectRatio1_78[key]
             exit for
         end if
     end for
 
-    if contentParent = invalid
-        print "Error: Does not contain image in aspect ration 1.78"
-        return ""
+    url = contentParent?.default?.url
+
+    if url <> invalid
+        if GetResponse(url) <> invalid
+            return url
+        else
+            return invalid
+        end if
     end if
-
-    default = contentParent.default
-    if default = invalid
-        print "Error: Does not contain default image"
-        return ""
-    end if
-
-    url = default.url
-    if url <> invalid then return url
-
-    return ""
+    return invalid
 end function
 
 sub GetRefSet(refID as string)
