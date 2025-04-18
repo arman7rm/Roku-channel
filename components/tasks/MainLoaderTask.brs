@@ -2,51 +2,57 @@ sub Init()
     m.top.functionName = "GetContent"
 end sub
 
-function GetContent() as void
+function GetResponse(url as string) as dynamic
     xfer = CreateObject("roURLTransfer")
     xfer.SetCertificatesFile("common:/certs/ca-bundle.crt")
-    xfer.SetURL("https://cd-static.bamgrid.com/dp-117731241344/home.json")
-    rsp = xfer.GetToString()
+    xfer.SetURL(url)
+    xfer.RetainBodyOnError(true)
+
+    response = xfer.GetToString()
+    
+    if response = invalid or response = ""
+        print "Error fetching URL: " + url
+        return invalid
+    end if
+
+    return response
+end function
+
+function GetContent() as void
+    response = GetResponse("https://cd-static.bamgrid.com/dp-117731241344/home.json")
     rootChildren = []
     rows = {}
 
-
-    if rsp <> invalid and rsp <> ""
-        json = ParseJson(rsp)
-        if json <> invalid
-
-            data = json.data
-            if data <> invalid
-                standardCollection = data.StandardCollection
-                'contentDescription = standardCollection.Lookup("text", invalid).Lookup("title", invalid).Lookup("full", invalid).Lookup("collection", invalid).Lookup("default", invalid).Lookup("content", "Unknown")
-                containers = standardCollection.containers
-                for each container in containers
-                    items = container.set.items
-                    if items <> invalid
-                        row = {}
-                        row.title = container.set.text.title.full.set.default.content
-                        row.children = []
-                        for each item in items
-                            itemData = GetItemData(item)
-                            row.children.Push(itemData)
-                        end for
-                        rootChildren.Push(row)
-                    end if
-                end for
-                ' set up a root ContentNode to represent rowList on the GridScreen
-                contentNode = CreateObject("roSGNode", "ContentNode")
-                contentNode.Update({
-                    children: rootChildren
-                }, true)
-                ' populate content field with root content node.
-                ' Observer(see OnMainContentLoaded in MainScene.brs) is invoked at that moment
-                m.top.content = contentNode
-            end if
+    json = ParseJson(response)
+    if json <> invalid
+        data = json.data
+        if data <> invalid
+            standardCollection = data.StandardCollection
+            'contentDescription = standardCollection.Lookup("text", invalid).Lookup("title", invalid).Lookup("full", invalid).Lookup("collection", invalid).Lookup("default", invalid).Lookup("content", "Unknown")
+            containers = standardCollection.containers
+            for each container in containers
+                items = container.set.items
+                if items <> invalid
+                    row = {}
+                    row.title = container.set.text.title.full.set.default.content
+                    row.children = []
+                    for each item in items
+                        itemData = GetItemData(item)
+                        row.children.Push(itemData)
+                    end for
+                    rootChildren.Push(row)
+                end if
+            end for
+            ' set up a root ContentNode to represent rowList on the GridScreen
+            contentNode = CreateObject("roSGNode", "ContentNode")
+            contentNode.Update({
+                children: rootChildren
+            }, true)
+            ' populate content field with root content node.
+            ' Observer(see OnMainContentLoaded in MainScene.brs) is invoked at that moment
+            m.top.content = contentNode
         end if
-    else
-        print "No response or invalid response from URL."
     end if
-
 end function
 
 function GetItemData(video as object)
@@ -83,7 +89,7 @@ function GetImage(video as object)
     end if
 
     tile = video.image.tile
-    if tile = invalid 
+    if tile = invalid
         print "Error: Does not contain tile"
         return ""
     end if
@@ -103,7 +109,7 @@ function GetImage(video as object)
         end if
     end for
 
-    if contentParent = invalid 
+    if contentParent = invalid
         print "Error: Does not contain image in aspect ration 1.78"
         return ""
     end if
@@ -124,8 +130,6 @@ sub GetRefSet(refID as string)
     xfer = CreateObject("roURLTransfer")
     xfer.SetCertificatesFile("common:/certs/ca-bundle.crt")
     xfer.SetURL("https://cd-static.bamgrid.com/dp-117731241344/sets/" + refID + ".json")
-    rsp = xfer.GetToString()
-    json = ParseJson(rsp)
-
-
+    response = xfer.GetToString()
+    json = ParseJson(response)
 end sub
