@@ -5,15 +5,17 @@
     <script type="text/brightscript" uri="UILogic/ContentTaskLogic.brs" />
     <script type="text/brightscript" uri="UILogic/GridScreenLogic.brs" />
     <children>
-        <!-- Overhang with Roku Developers logo -->
-        <OverHang
+        <!-- Overhang   -->
+        <Overhang
             id="overhang"
+            title="Home"
+            showClock="true"
             showOptions="false"
-            showClock="false"
             logoUri="pkg:/images/hd_overhang_logo.png"
-            translation="[0,10]"
+            translation="[0,0]"
         />
         <!-- Loading Indicator should be visible only in case of waiting for content -->
+
         <Label
             id="loadingIndicator"
             text="Loading..."
@@ -24,5 +26,17 @@
             vertAlign="center"
             font="font:MediumBoldSystemFont"
         />
+        <Animation
+            id="fadeAnim"
+            duration="0.8"
+            repeat="true"
+            easeFunction="linear"
+        >
+            <FloatFieldInterpolator
+                fieldToInterp="loadingIndicator.opacity"
+                key="[0.0, 0.5, 1.0]"
+                keyValue="[0.5, 1.0, 0.5]"
+            />
+        </Animation>
     </children>
 </component>
