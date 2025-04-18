@@ -63,49 +63,8 @@ function GetItemData(video as object)
         exit for
     end for
 
-    ' url = video.image.tile["1.78"].series.default.url
     item.tile = GetImage(video)
-    
-    print item.tile
-    ' if url <> invalid
-    '     item.tile = url
-    ' end if
-
-    ' url = video.Lookup("image", invalid).Lookup("title_treatment_layer", invalid).Lookup("1.78", invalid).Lookup("series", invalid).Lookup("default", invalid).Lookup("url", invalid)
-    ' if url <> invalid
-    '     item.title_treatment_layer = url
-    ' end if
-
-    ' url = video.Lookup("image", invalid).Lookup("title_treatment", invalid).Lookup("1.78", invalid).Lookup("series", invalid).Lookup("default", invalid).Lookup("url", invalid)
-    ' if url <> invalid
-    '     item.title_treatment = url
-    ' end if
-
-
-    ' url = video.Lookup("image", invalid).Lookup("background", invalid).Lookup("1.78", invalid).Lookup("series", invalid).Lookup("default", invalid).Lookup("url", invalid)
-    ' if url <> invalid
-    '     item.background = url
-    ' end if
-
-    ' url = video.Lookup("image", invalid).Lookup("hero_collection", invalid).Lookup("1.78", invalid).Lookup("series", invalid).Lookup("default", invalid).Lookup("url", invalid)
-    ' if url <> invalid
-    '     item.hero_collection = url
-    ' end if
-
-
-    ' url = video.Lookup("image", invalid).Lookup("hero_tile", invalid).Lookup("1.78", invalid).Lookup("series", invalid).Lookup("default", invalid).Lookup("url", invalid)
-    ' if url <> invalid
-    '     item.hero_tile = url
-    ' end if
-
     item.contentId = video.contentId
-
-    ' item.tags = []
-
-    ' for each tag in video.tags
-    '     item.tags.Push(tag.type)
-    ' end for
-
     item.videoArt = []
 
     for each media in video.videoArt
@@ -170,30 +129,3 @@ sub GetRefSet(refID as string)
 
 
 end sub
-
-' Recursive function to find the value of a key in nested JSON
-function FindKeyValue(obj as object, targetKey as string) as dynamic
-    if obj = invalid return invalid
-
-    ' Check if current object has the target key
-    if obj.Lookup(targetKey) <> invalid
-        return obj[targetKey]
-    end if
-
-    ' Recursively search nested objects
-    for each key in obj
-        if Type(obj[key]) = "roAssociativeArray"
-            result = FindKeyValue(obj[key], targetKey)
-            if result <> invalid return result
-        else if Type(obj[key]) = "roArray"
-            for each item in obj[key]
-                if Type(item) = "roAssociativeArray"
-                    result = FindKeyValue(item, targetKey)
-                    if result <> invalid return result
-                end if
-            end for
-        end if
-    end for
-
-    return invalid
-end function
