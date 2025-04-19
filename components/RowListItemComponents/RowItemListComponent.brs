@@ -9,7 +9,7 @@ sub showfocus()
 end sub
 
 sub showrowfocus()
-    m.poster.width = 200 + (132 * m.top.rowFocusPercent)
+    m.poster.width = 200 + (131 * m.top.rowFocusPercent)
     m.poster.height = 112 + (67 * m.top.rowFocusPercent)
 end sub
 
