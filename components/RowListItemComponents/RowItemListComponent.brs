@@ -9,8 +9,8 @@ sub showfocus()
 end sub
 
 sub showrowfocus()
-    m.poster.width = 200 + (140 * m.top.rowFocusPercent)
-    m.poster.height = 112 + (70 * m.top.rowFocusPercent)
+    m.poster.width = 200 + (132 * m.top.rowFocusPercent)
+    m.poster.height = 112 + (67 * m.top.rowFocusPercent)
 end sub
 
 sub OnContentSet()
