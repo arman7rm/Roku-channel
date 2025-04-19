@@ -76,24 +76,24 @@ function GetContainers(rsp as dynamic) as dynamic
     return json?.data?.StandardCollection?.containers
 end function
 
-function GetItemData(video as object)
-    item = {}
-    item.full = video.text.title.full
-    for each key in item.full
-        format = item.full[key]
+function GetItemData(item as object)
+    data = {}
+    data.full = item.text.title.full
+    for each key in data.full
+        format = data.full[key]
         if format <> invalid
             default = format.default
             if default <> invalid
-                item.title = default.content
+                data.title = default.content
             end if
         end if
         exit for
     end for
 
-    item.tile = GetImage(video)
-    item.contentId = video.contentId
+    data.tile = GetImage(item)
+    data.contentId = item.contentId
 
-    return item
+    return data
 end function
 
 function GetImage(video as object)

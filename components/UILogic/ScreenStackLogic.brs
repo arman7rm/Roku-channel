@@ -13,6 +13,7 @@ sub ShowScreen(node as object)
     m.top.AppendChild(node)
     node.visible = true
     node.SetFocus(true)
+    
     m.screenStack.Push(node)
 end sub
 

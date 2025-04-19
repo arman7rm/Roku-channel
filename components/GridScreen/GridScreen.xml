@@ -14,15 +14,6 @@
             translation="[130,200]"
             font="font:LargeSystemFont"
         />
-        <!-- 
-        <Label 
-            id="descriptionLabel"
-            wrap="true"
-            width="1020"
-            numLines="3"
-            translation="[130,220"
-        />
--->
         <RowList
             itemComponentName="RowListItemComponent"
             id="rowList"
