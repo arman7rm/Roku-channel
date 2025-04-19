@@ -17,10 +17,10 @@ function GetContent() as void
     end if
 
     for each container in containers
-        items = container.set.items
+        items = container?.set?.items
         if items <> invalid
             row = {}
-            row.title = container.set.text.title.full.set.default.content
+            row.title = container?.set?.text?.title?.full?.set?.default?.content
             row.children = []
             for each item in items
                 itemData = GetItemData(item)
@@ -57,33 +57,11 @@ function GetResponse(url as string) as dynamic
             status = msg.GetResponseCode()
             if status = 200
                 return response
+            ' Can add logic to handle other response codes here
             else
                 print "Error fetching URL: " + url
+                print "Status Code: "+ status.ToStr()
                 return invalid
-            end if
-        end if
-    end if
-end function
-
-function ValidateImage(url as string) as dynamic
-    xfer = CreateObject("roURLTransfer")
-    xfer.SetCertificatesFile("common:/certs/ca-bundle.crt")
-    xfer.SetURL(url)
-    xfer.RetainBodyOnError(true)
-    xfer.InitClientCertificates()
-    port = CreateObject("roMessagePort")
-    xfer.SetPort(port)
-
-    response = xfer.GetToString()
-    if xfer.AsyncGetToString()
-        msg = wait(2000, port)
-        if type(msg) = "roUrlEvent"
-            status = msg.GetResponseCode()
-            if status = 200
-                return true
-            else
-                print "Error: Image not found."
-                return false
             end if
         end if
     end if
@@ -130,7 +108,6 @@ function GetImage(video as object)
     contentParent = aspectRatio1_78
     for each key in aspectRatio1_78
         if aspectRatio1_78[key] <> invalid
-            print key
             contentParent = aspectRatio1_78[key]
             exit for
         end if

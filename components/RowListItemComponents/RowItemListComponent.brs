@@ -15,7 +15,10 @@ end sub
 
 sub OnContentSet()
     content = m.top.itemContent
-    if content = invalid then return
+    if content = invalid 
+        print "Error: Failed to load content."
+        return
+    end if 
     if m.poster <> invalid
         if content.tile <> invalid
             m.poster.uri = content.tile

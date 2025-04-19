@@ -8,9 +8,10 @@
             "name": "BrightScript Debug: Launch",
             "type": "brightscript",
             "request": "launch",
-            "host": "${promptForHost}",
-            "password": "${promptForPassword}",
+            "host": "192.168.1.126",
+            "password": "madrid",
             "rootDir": "${workspaceFolder}",   
+            "debugServer": 8081,  // Explicitly set
         }
     ]
 }
