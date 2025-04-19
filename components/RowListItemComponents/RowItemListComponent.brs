@@ -1,24 +1,24 @@
 function Init()
     m.poster = m.top.FindNode("poster")
-    m.itemmask = m.top.findNode("itemMask")
 end function
 
 sub showfocus()
     'This increases the size of the tile as it gains more focus
-    scale = 1 + (m.top.focusPercent * 0.08)
+    scale = 1 + (m.top.focusPercent * 0.20)
     m.poster.scale = [scale, scale]
 end sub
 
 sub showrowfocus()
-    m.itemmask.opacity = 0.75 - (m.top.rowFocusPercent * 0.75)
+    m.poster.width = 200 + (140 * m.top.rowFocusPercent)
+    m.poster.height = 112 + (70 * m.top.rowFocusPercent)
 end sub
 
 sub OnContentSet()
     content = m.top.itemContent
-    if content = invalid 
+    if content = invalid
         print "Error: Failed to load content."
         return
-    end if 
+    end if
     if m.poster <> invalid
         if content.tile <> invalid
             m.poster.uri = content.tile

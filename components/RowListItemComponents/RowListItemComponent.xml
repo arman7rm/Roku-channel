@@ -12,20 +12,12 @@
             id="poster"
             translation="[10,10]"
             width="200"
-            height="120"
+            height="112"
             loadWidth="200"
-            loadHeight="120"
+            loadHeight="112"
             loadDisplayMode="scaleToFit"
-            scaleRotateCenter = "[ 100.0, 60.0 ]"  
+            scaleRotateCenter="[100.0, 56.0]"
         >
-            <Rectangle
-                id="itemMask"
-                color="0x000000FF"
-                opacity="0.75"
-                width="200"
-                height="120"
-                scaleRotateCenter="[ 100.0, 60.0 ]" />
         </Poster>
-
     </children>
 </component>

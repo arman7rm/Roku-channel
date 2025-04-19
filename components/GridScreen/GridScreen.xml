@@ -11,21 +11,14 @@
         <Label
             id="titleLabel"
             width="1020"
-            translation="[130,200]"
+            translation="[120,200]"
             font="font:LargeSystemFont"
         />
-        <RowList
+        <ZoomRowList
             itemComponentName="RowListItemComponent"
             id="rowList"
-            translation="[80,250]"
-            numRows="3"
-            rowItemSize="[[220,140]]"
-            rowItemSpacing="[[15,10]]"
-            itemSize="[1100,250]"
-            rowLabelOffset="[[50,20]]"
-            focusXOffset="[50]"
-            showRowLabel="[true]"
-            rowFocusAnimationStyle="floatingfocus"
+            translation="[120,250]"
+            drawFocusFeedback="true" 
         />
     </children>
 </component>
