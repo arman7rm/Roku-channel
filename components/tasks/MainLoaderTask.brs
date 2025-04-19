@@ -3,7 +3,7 @@ sub Init()
 end sub
 
 function GetContent() as void
-    response = GetResponse("https://cd-static.bamgrid.com/dp-117731241344/home.json")
+    response = GetResponse(m.top.inputUrl)
     if response = invalid
         print "Error fetching content: Invalid response recieved."
         return

@@ -2,6 +2,7 @@
 <component name="MainLoaderTask" extends="Task">
     <interface>
         <field id="content" type="node" />
+        <field id="inputUrl" type="string" />
     </interface>
     <script type="text/brightscript" uri="MainLoaderTask.brs" />
 </component>
