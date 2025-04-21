@@ -81,18 +81,24 @@ function GetContainers(rsp as dynamic) as dynamic
 end function
 
 function GetItemData(item as object)
-    data = {}
-    data.full = item.text.title.full
+    data = {
+        title: ""
+        tile: ""
+        contentId: ""
+    }
 
-    for each key in data.full
-        data.title = data.full[key]?.default?.content
-        exit for
-    end for
-
+    data.full = item?.text?.title?.full
+    if data.full <> invalid
+        for each key in data.full
+            data.title = data.full[key]?.default?.content
+            exit for
+        end for
+    end if
+    
     data.tile = GetImageUrl(item, "1.78")
     data.contentId = item.contentId
-
     return data
+    
 end function
 
 function GetImageUrl(video as object, size as string)

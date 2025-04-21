@@ -15,5 +15,4 @@ sub Init()
     homeGridContentApi = "https://cd-static.bamgrid.com/dp-117731241344/home.json"
 
     RunContentTask(homeGridContentApi)
-
 end sub

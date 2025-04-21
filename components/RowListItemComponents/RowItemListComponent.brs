@@ -4,13 +4,18 @@ end function
 
 sub showfocus()
     'This increases the size of the tile as it gains more focus
-    scale = 1 + (m.top.focusPercent * 0.20)
+    scaleFactor = 0.20
+    scale = 1 + (m.top.focusPercent * scaleFactor)
     m.poster.scale = [scale, scale]
 end sub
 
 sub showrowfocus()
-    m.poster.width = 200 + (131 * m.top.rowFocusPercent)
-    m.poster.height = 112 + (67 * m.top.rowFocusPercent)
+    defaultposterWidth = 200
+    defaultposterHeight = 112
+    widthFocusOffset = 131
+    heightFocusOffset = 67
+    m.poster.width = defaultposterWidth + (widthFocusOffset * m.top.rowFocusPercent)
+    m.poster.height = defaultposterHeight + (heightFocusOffset * m.top.rowFocusPercent)
 end sub
 
 sub OnContentSet()
@@ -35,6 +40,7 @@ sub OnContentSet()
 end sub
 
 sub OnPosterLoadStatusChanged(event as object)
+    print event
     loadStatus = event.GetData()
     if loadStatus = "failed"
         print "Error: "+ m.top.itemContent.title
