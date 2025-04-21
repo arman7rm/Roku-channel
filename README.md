@@ -4,7 +4,7 @@ Instructions to View: Upload the my-roku-app.zip file to your Roku Development A
 
 # Thoughts
 This was a fun project to learn SceneGraph and  BrightScript. It is a simple UI that initially renders an Overhang and a loading component while 
-fetching data from an API in the background. Once the data is retrieved, validated and sanitized, it is stored in a content node which is used to render a GridScreen that features a ZoomList Component, display varies titles (in the form of rowListItemComponents) in categorical rows. 
+fetching data from an API in the background. Once the data is retrieved, validated and sanitized, it is stored in a content node which is used to render a GridScreen that features a ZoomList Component, displaying various titles (in the form of rowListItemComponents) in categorical rows. 
 
 # Future improvements - What I would do given more time with this feature:
 - Add unit testing for the various brs files ensuring comoponents load and methods execute as expected.
