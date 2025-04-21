@@ -40,7 +40,6 @@ sub OnContentSet()
 end sub
 
 sub OnPosterLoadStatusChanged(event as object)
-    print event
     loadStatus = event.GetData()
     if loadStatus = "failed"
         print "Error: "+ m.top.itemContent.title
