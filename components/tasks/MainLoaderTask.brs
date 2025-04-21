@@ -50,21 +50,25 @@ function GetResponse(url as string) as dynamic
     port = CreateObject("roMessagePort")
     xfer.SetPort(port)
 
-    response = xfer.GetToString()
     if xfer.AsyncGetToString()
         msg = wait(3000, port)
         if type(msg) = "roUrlEvent"
             status = msg.GetResponseCode()
             if status = 200
-                return response
-            ' Can add logic to handle other response codes here
+                return msg.GetString() ' Use the response from the async call
             else
-                print "Error fetching URL: " + url
-                print "Status Code: "+ status.ToStr()
+                print "Error fetching URL: "; url; " Status: "; status.ToStr()
                 return invalid
             end if
+        else if msg = invalid ' timeout
+            print "Request timed out for: "; url
+            return invalid
         end if
+    else
+        print "Failed to initiate async request for: "; url
+        return invalid
     end if
+    return invalid
 end function
 
 function GetContainers(rsp as dynamic) as dynamic
@@ -93,26 +97,16 @@ end function
 
 function GetImageUrl(video as object, size as string)
     aspectRatio = video?.image?.tile[size]
-
     if aspectRatio = invalid
-        print "Error: Does not contain image in aspect ratio " + size
+        print "No image found for size: "; size
         return invalid
     end if
 
-    ' Check for either "series" or other possible parent objects
-    url = invalid
+    ' Return first available URL without checking
     for each key in aspectRatio
         url = aspectRatio[key]?.default?.url
-        exit for
+        if url <> invalid then return url
     end for
-
-    if url <> invalid
-        if GetResponse(url) <> invalid
-            return url
-        else
-            return invalid
-        end if
-    end if
     return invalid
 end function
 
