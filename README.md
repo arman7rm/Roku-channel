@@ -15,3 +15,4 @@ fetching data from an API in the background. Once the data is retrieved, validat
 - Create component to display when API fails and no content could be loaded
 - Add exponential backoff on API calls to mitigate network failures
 - Add logging
+- Add Linting
