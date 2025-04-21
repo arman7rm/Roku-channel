@@ -79,41 +79,32 @@ end function
 function GetItemData(item as object)
     data = {}
     data.full = item.text.title.full
+
     for each key in data.full
-        format = data.full[key]
-        if format <> invalid
-            default = format.default
-            if default <> invalid
-                data.title = default.content
-            end if
-        end if
+        data.title = data.full[key]?.default?.content
         exit for
     end for
 
-    data.tile = GetImage(item)
+    data.tile = GetImageUrl(item, "1.78")
     data.contentId = item.contentId
 
     return data
 end function
 
-function GetImage(video as object)
-    aspectRatio1_78 = video?.image?.tile["1.78"]
+function GetImageUrl(video as object, size as string)
+    aspectRatio = video?.image?.tile[size]
 
-    if aspectRatio1_78 = invalid
-        print "Error: Does not contain image in aspect ration 1.78"
+    if aspectRatio = invalid
+        print "Error: Does not contain image in aspect ratio " + size
         return invalid
     end if
 
     ' Check for either "series" or other possible parent objects
-    contentParent = aspectRatio1_78
-    for each key in aspectRatio1_78
-        if aspectRatio1_78[key] <> invalid
-            contentParent = aspectRatio1_78[key]
-            exit for
-        end if
+    url = invalid
+    for each key in aspectRatio
+        url = aspectRatio[key]?.default?.url
+        exit for
     end for
-
-    url = contentParent?.default?.url
 
     if url <> invalid
         if GetResponse(url) <> invalid
