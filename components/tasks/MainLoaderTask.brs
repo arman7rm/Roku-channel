@@ -42,33 +42,43 @@ function GetContent() as void
 end function
 
 function GetResponse(url as string) as dynamic
-    xfer = CreateObject("roURLTransfer")
-    xfer.SetCertificatesFile("common:/certs/ca-bundle.crt")
-    xfer.SetURL(url)
-    xfer.RetainBodyOnError(true)
-    xfer.InitClientCertificates()
-    port = CreateObject("roMessagePort")
-    xfer.SetPort(port)
+    maxRetries = 3
+    retryCount = 0
+    response = invalid
 
-    if xfer.AsyncGetToString()
-        msg = wait(3000, port)
-        if type(msg) = "roUrlEvent"
-            status = msg.GetResponseCode()
-            if status = 200
-                return msg.GetString() ' Use the response from the async call
-            else
-                print "Error fetching URL: "; url; " Status: "; status.ToStr()
-                return invalid
+    while retryCount < maxRetries
+        xfer = CreateObject("roURLTransfer")
+        xfer.SetCertificatesFile("common:/certs/ca-bundle.crt")
+        xfer.SetURL(url)
+        xfer.RetainBodyOnError(true)
+        xfer.InitClientCertificates()
+        port = CreateObject("roMessagePort")
+        xfer.SetPort(port)
+
+        if xfer.AsyncGetToString()
+            msg = wait(3000, port)
+            if type(msg) = "roUrlEvent"
+                status = msg.GetResponseCode()
+                if status = 200
+                    response = msg.GetString()
+                    exit while ' Success - exit retry loop
+                else
+                    print "Error fetching URL: "; url; " Status: "; status.ToStr(); " (Attempt "; retryCount + 1; " of "; maxRetries; ")"
+                end if
+            else if msg = invalid ' timeout
+                print "Request timed out for: "; url; " (Attempt "; retryCount + 1; " of "; maxRetries; ")"
             end if
-        else if msg = invalid ' timeout
-            print "Request timed out for: "; url
-            return invalid
+        else
+            print "Failed to initiate async request for: "; url; " (Attempt "; retryCount + 1; " of "; maxRetries; ")"
         end if
-    else
-        print "Failed to initiate async request for: "; url
-        return invalid
-    end if
-    return invalid
+
+        retryCount = retryCount + 1
+        if retryCount < maxRetries
+            sleep(1000) ' Add a small delay between retries
+        end if
+    end while
+
+    return response
 end function
 
 function GetContainers(rsp as dynamic) as dynamic
@@ -94,15 +104,15 @@ function GetItemData(item as object)
             exit for
         end for
     end if
-    
+
     data.tile = GetImageUrl(item, "1.78")
     data.contentId = item.contentId
     return data
-    
+
 end function
 
-function GetImageUrl(video as object, size as string)
-    aspectRatio = video?.image?.tile[size]
+function GetImageUrl(data as object, size as string)
+    aspectRatio = data?.image?.tile[size]
     if aspectRatio = invalid
         print "No image found for size: "; size
         return invalid

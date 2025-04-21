@@ -1,5 +1,7 @@
 function Init()
     m.poster = m.top.FindNode("poster")
+    m.fallBack = m.top.FindNode("fallback")
+    m.fallBackText = m.top.FindNode("fallbackText")
 end function
 
 sub showfocus()
@@ -7,6 +9,7 @@ sub showfocus()
     scaleFactor = 0.20
     scale = 1 + (m.top.focusPercent * scaleFactor)
     m.poster.scale = [scale, scale]
+    m.fallBack.scale = [scale, scale]
 end sub
 
 sub showrowfocus()
@@ -14,8 +17,12 @@ sub showrowfocus()
     defaultposterHeight = 112
     widthFocusOffset = 131
     heightFocusOffset = 67
+    
     m.poster.width = defaultposterWidth + (widthFocusOffset * m.top.rowFocusPercent)
     m.poster.height = defaultposterHeight + (heightFocusOffset * m.top.rowFocusPercent)
+
+    m.fallBack.width = defaultposterWidth + (widthFocusOffset * m.top.rowFocusPercent)
+    m.fallBack.height = defaultposterHeight + (heightFocusOffset * m.top.rowFocusPercent)
 end sub
 
 sub OnContentSet()
@@ -39,12 +46,15 @@ sub OnContentSet()
     end if
 end sub
 
+' Handle broken image
 sub OnPosterLoadStatusChanged(event as object)
     loadStatus = event.GetData()
     if loadStatus = "failed"
         print "Error: "+ m.top.itemContent.title
         print "Image failed to load: " + m.poster.uri
-        m.poster.uri = "pkg:/images/fallback-image.png"
+        m.poster.visible = false
+        m.fallBack.visible = true
+        m.fallBackText.text = m.top.itemContent.title
     end if
     ' Clean up the observer
     m.poster.UnobserveField("loadStatus")

@@ -19,5 +19,26 @@
             scaleRotateCenter="[100.0, 56.0]"
         >
         </Poster>
+        <Rectangle
+            id="fallback"
+            visible="false"
+            translation="[10,10]"
+            width="200"
+            height="112"
+            scaleRotateCenter="[100.0, 56.0]"
+            color="0x000000FF">
+
+            <Label
+                id="fallbackText"
+                translation="[85, 48]"
+                width="180"
+                height="100"
+                horizAlign="center"
+                vertAlign="center"
+                font="font:SmallBoldSystemFont"
+                color="0xFFFFFFFF"
+                text="Error loading Image"
+            />
+        </Rectangle>
     </children>
 </component>
