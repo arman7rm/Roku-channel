@@ -17,8 +17,8 @@ sub showrowfocus()
     defaultposterHeight = 112
     widthFocusOffset = 131
     heightFocusOffset = 67
-    fallbackTextTranslationOffsetX = 75
-    fallbackTextTranslationOffsetY = 48
+    fallbackTextTranslationOffsetX = 65
+    fallbackTextTranslationOffsetY = 38
     
     m.poster.width = defaultposterWidth + (widthFocusOffset * m.top.rowFocusPercent)
     m.poster.height = defaultposterHeight + (heightFocusOffset * m.top.rowFocusPercent)
