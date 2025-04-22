@@ -17,12 +17,16 @@ sub showrowfocus()
     defaultposterHeight = 112
     widthFocusOffset = 131
     heightFocusOffset = 67
+    fallbackTextTranslationOffsetX = 75
+    fallbackTextTranslationOffsetY = 48
     
     m.poster.width = defaultposterWidth + (widthFocusOffset * m.top.rowFocusPercent)
     m.poster.height = defaultposterHeight + (heightFocusOffset * m.top.rowFocusPercent)
 
     m.fallBack.width = defaultposterWidth + (widthFocusOffset * m.top.rowFocusPercent)
     m.fallBack.height = defaultposterHeight + (heightFocusOffset * m.top.rowFocusPercent)
+
+    m.fallBackText.translation = [10 + fallbackTextTranslationOffsetX*m.top.rowFocusPercent, 10 + fallbackTextTranslationOffsetY*m.top.rowFocusPercent]
 end sub
 
 sub OnContentSet()
